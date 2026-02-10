@@ -12,7 +12,7 @@ public partial class TextPage : ContentPage
     Button ttsBtn;
 
     VerticalStackLayout vsl;
-	public TextPage(int i)
+	public TextPage()
 	{
 		lbl = new Label
 		{
@@ -126,7 +126,7 @@ public partial class TextPage : ContentPage
 		else if (nuup.ZIndex == 2)
 		{
 
-			
-		}
+            Navigation.PushAsync(new FigurePage());
+        }
     }
 }
