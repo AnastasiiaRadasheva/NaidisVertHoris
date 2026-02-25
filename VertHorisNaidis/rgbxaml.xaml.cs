@@ -28,18 +28,18 @@ namespace VertHorisNaidis
             AbsoluteLayout.SetLayoutBounds(title, new Rect(0.5, 0.05, -1, -1));
             AbsoluteLayout.SetLayoutFlags(title, AbsoluteLayoutFlags.PositionProportional);
 
-            redBox = CreateColorBox(Colors.DarkRed, 0.25);
-            greenBox = CreateColorBox(Colors.DarkGreen, 0.5);
-            blueBox = CreateColorBox(Colors.DarkBlue, 0.75);
+            redBox = CreateColorBox(0.25);
+            greenBox = CreateColorBox(0.5);
+            blueBox = CreateColorBox(0.75);
 
             redSlider = CreateSlider(0.20);
-            redLabel = CreateLabel("Red = 0", 0.25);
+            redLabel = CreateLabel("Red = 00", 0.25);
 
             greenSlider = CreateSlider(0.30);
-            greenLabel = CreateLabel("Green = 0", 0.35);
+            greenLabel = CreateLabel("Green = 00", 0.35);
 
             blueSlider = CreateSlider(0.40);
-            blueLabel = CreateLabel("Blue = 0", 0.45);
+            blueLabel = CreateLabel("Blue = 00", 0.45);
 
             boxView = new BoxView
             {
@@ -50,10 +50,10 @@ namespace VertHorisNaidis
 
             sizeStepper = new Stepper
             {
-                Minimum = 150,
-                Maximum = 300,
+                Minimum = 100,
+                Maximum = 250,
                 Increment = 10,
-                Value = 250
+                Value = 180
             };
             sizeStepper.ValueChanged += OnStepperChanged;
             AbsoluteLayout.SetLayoutBounds(sizeStepper, new Rect(0.5, 0.82, -1, -1));
@@ -89,11 +89,10 @@ namespace VertHorisNaidis
             Content = layout;
         }
 
-        BoxView CreateColorBox(Color color, double x)
+        BoxView CreateColorBox(double x)
         {
             BoxView box = new BoxView
             {
-                Color = color,
                 WidthRequest = 60,
                 HeightRequest = 60,
                 CornerRadius = 15
@@ -131,30 +130,37 @@ namespace VertHorisNaidis
             return l;
         }
 
-        void OnSliderValueChanged(object sender, ValueChangedEventArgs e)
+        void OnSliderValueChanged(object sender, ValueChangedEventArgs args)
         {
-            int r = (int)redSlider.Value;
-            int g = (int)greenSlider.Value;
-            int b = (int)blueSlider.Value;
+            if (sender == redSlider)
+            {
+                redLabel.Text = String.Format("Red = {0:X2}", (int)args.NewValue);
+            }
+            else if (sender == greenSlider)
+            {
+                greenLabel.Text = String.Format("Green = {0:X2}", (int)args.NewValue);
+            }
+            else if (sender == blueSlider)
+            {
+                blueLabel.Text = String.Format("Blue = {0:X2}", (int)args.NewValue);
+            }
 
-            redLabel.Text = $"Red = {r}";
-            greenLabel.Text = $"Green = {g}";
-            blueLabel.Text = $"Blue = {b}";
+            boxView.Color = Color.FromRgb(
+                (int)redSlider.Value,
+                (int)greenSlider.Value,
+                (int)blueSlider.Value);
 
-            boxView.Color = Color.FromRgb(r, g, b);
-
-            redBox.Color = Color.FromRgb(r, 0, 0);
-            greenBox.Color = Color.FromRgb(0, g, 0);
-            blueBox.Color = Color.FromRgb(0, 0, b);
+            redBox.Color = Color.FromRgb((int)redSlider.Value, 0, 0);
+            greenBox.Color = Color.FromRgb(0, (int)greenSlider.Value, 0);
+            blueBox.Color = Color.FromRgb(0, 0, (int)blueSlider.Value);
         }
-
 
         void OnStepperChanged(object sender, ValueChangedEventArgs e)
         {
             double size = e.NewValue;
 
             AbsoluteLayout.SetLayoutBounds(boxView,
-                new Rect(0.5, 0.60, size, size));
+                new Rect(0.5, 0.65, size, size));
         }
 
         void OnRandomClicked(object sender, EventArgs e)
